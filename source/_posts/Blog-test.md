@@ -1,7 +1,7 @@
 ---
 title: Blog test
 date: 2026-08-27 01:37:59
-tags:
+tags: test
 description: 測試一下 blog
 ---
 

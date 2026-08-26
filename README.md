@@ -47,12 +47,17 @@ nvm use
 ```bash
 git clone git@github.com:CYhuang314/CYhuang314.github.io.git
 cd CYhuang314.github.io
+
+# 草稿放在獨立的私人倉庫，clone 進 source/_drafts/
+git clone git@github.com:CYhuang314/blog-drafts.git source/_drafts
+
 nvm use              # 切換到 Node 22
 npm install          # 安裝 hexo、主題與所有外掛
 npx hexo server      # 打開 http://localhost:4000 確認可以跑
 ```
 
 `node_modules/`、`public/`、`db.json` 都不會進版控，clone 下來後一定要 `npm install`。
+草稿倉庫的部分請看下面的[草稿功能](#草稿功能)。
 
 ---
 
@@ -166,7 +171,46 @@ npx hexo server --draft                # 預覽時才會顯示草稿
 npx hexo publish "還在寫的文章"        # 寫完了，移到 source/_posts/
 ```
 
-草稿預設不會被 `hexo generate` 產出，所以就算 push 上去也不會出現在網站上。
+草稿不會被 `hexo generate` 產出（`_config.yml` 的 `render_drafts: false`），所以不會出現在網站上。
+
+### ⚠️ 草稿存放在獨立的私人倉庫
+
+本倉庫是**公開**的，所以 `source/_drafts/` 已經加進 `.gitignore`，
+草稿改放在私人倉庫 <https://github.com/CYhuang314/blog-drafts> 備份。
+
+也就是說 `source/_drafts/` 這個資料夾**本身是另一個 git repo**：
+
+| | 公開 repo（本專案） | 私人 repo（blog-drafts） |
+| --- | --- | --- |
+| 位置 | 專案根目錄 | `source/_drafts/` |
+| 內容 | 正式文章、設定、主題 | 未完成的草稿 |
+| 誰看得到 | 所有人 | 只有你 |
+
+**備份草稿**（在 `source/_drafts/` 資料夾裡執行）：
+
+```bash
+cd source/_drafts
+git add . && git commit -m "draft: 更新草稿" && git push
+cd ../..
+```
+
+**草稿寫完要發佈**時，兩個倉庫都要 commit：
+
+```bash
+npx hexo publish "還在寫的文章"        # 檔案從 _drafts 移到 _posts
+
+git add . && git commit -m "post: 新增 還在寫的文章" && git push   # 公開 repo
+
+cd source/_drafts
+git add -A && git commit -m "draft: 發佈 還在寫的文章" && git push  # 私人 repo
+cd ../..
+```
+
+**確認草稿真的沒外流**（在專案根目錄執行，輸出應該是空的）：
+
+```bash
+git status --short | grep _drafts
+```
 
 ---
 
@@ -206,7 +250,7 @@ cp ~/Pictures/screenshot.png source/img/
 │   └── page.md
 ├── source/
 │   ├── _posts/              # ★ 你的文章都放這裡
-│   ├── _drafts/             # 草稿（不會發佈）
+│   ├── _drafts/             # 草稿（獨立的私人 git repo，已 gitignore）
 │   ├── about/index.md       # 關於頁
 │   ├── tags/index.md        # 標籤頁
 │   └── categories/index.md  # 分類頁
@@ -443,6 +487,7 @@ git push
 | 新增文章 | `npx hexo new "標題"` |
 | 新增草稿 | `npx hexo new draft "標題"` |
 | 草稿轉正式文章 | `npx hexo publish "標題"` |
+| 備份草稿到私人倉庫 | `cd source/_drafts && git add . && git commit -m "訊息" && git push && cd ../..` |
 | 新增獨立頁面 | `npx hexo new page "頁面名"` |
 | 本機預覽 | `npx hexo server` |
 | 本機預覽（含草稿） | `npx hexo server --draft` |

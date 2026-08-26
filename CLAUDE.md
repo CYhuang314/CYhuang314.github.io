@@ -48,6 +48,7 @@ Push to `main` → `.github/workflows/deploy.yml` runs `npm ci`, `hexo clean`, `
 ## Structure
 
 - `source/_posts/` — published posts, one Markdown file each with YAML front matter.
+- `source/_drafts/` — **gitignored here, and is its own separate git repo** pointing at the private `CYhuang314/blog-drafts`. This repo is public, so drafts are deliberately kept out of it. Never remove `source/_drafts/` from `.gitignore`, and never `git add` drafts from the project root — commit them from inside `source/_drafts/` instead (`git -C source/_drafts ...`). When a draft is published, both repos need a commit.
 - `source/about|tags|categories/index.md` — pages the Fluid navbar links to; each needs the matching `layout:` (`about` / `tags` / `categories`) or it 404s.
 - `scaffolds/` — templates `hexo new` copies. Edit these to change default front matter.
 - `_config.yml` — site config. Permalinks are `:year/:month/:day/:title/`, so the URL derives from the post's `title` front matter — renaming a title changes its URL. Chinese titles get URL-encoded; use a per-post `permalink:` to override.

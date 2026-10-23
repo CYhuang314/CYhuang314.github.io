@@ -36,6 +36,9 @@ jobs:
         run: npm ci
 
       - name: Build
+        # runner 預設 UTC，網址中的年/月/日依建置機器時區計算，需與本機（台北）一致
+        env:
+          TZ: Asia/Taipei
         run: npx hexo clean && npx hexo generate
 
       - name: Upload artifact

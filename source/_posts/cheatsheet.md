@@ -1,5 +1,6 @@
 ---
 title: Hello World
+date: 2026-08-26 17:11:39
 description: 懶得刪了，反正就當常用指令的小抄
 ---
 

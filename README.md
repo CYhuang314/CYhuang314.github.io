@@ -135,9 +135,9 @@ gh run watch                   # 即時盯著最新那一次跑完
 
 | 欄位 | 必填 | 說明 |
 | --- | --- | --- |
-| `title` | ✅ | 文章標題，同時決定網址中的 slug |
-| `date` | ✅ | 發佈時間，格式 `YYYY-MM-DD HH:mm:ss`，決定排序 |
-| `updated` | | 更新時間，不填則用檔案的修改時間 |
+| `title` | ✅ | 文章標題（網址中的 slug 是**檔名**，不是標題） |
+| `date` | ✅ | 發佈時間，格式 `YYYY-MM-DD HH:mm:ss`，決定排序與網址中的日期。**一定要寫**：缺少時會用檔案建立時間，而 CI 每次部署都是新檔案，日期和網址會跟著每次部署改變 |
+| `updated` | | 更新時間，不填則用檔案的修改時間（在 CI 上等於部署時間） |
 | `tags` | | 標籤，可多個 |
 | `categories` | | 分類，可多個（有階層關係） |
 | `excerpt` | | 首頁顯示的摘要文字 |
@@ -353,8 +353,16 @@ title: Hexo：從零開始的部落格       # ❌ 會解析失敗
 
 ### Q5. 中文標題產生的網址很醜 / 有亂碼
 
-預設永久連結是 `:year/:month/:day/:title/`，中文標題會被 URL 編碼。
-在該篇文章的 front matter 指定英文網址即可：
+預設永久連結是 `:year/:month/:day/:title/`，其中 `:title` 是**檔名**而不是 front matter 的標題。
+`hexo new "中文標題"` 會產生中文檔名，網址就會被 URL 編碼。
+
+建立時用 `--slug` 指定英文檔名：
+
+```bash
+npx hexo new "我的第一篇文章" --slug my-first-post
+```
+
+或在該篇文章的 front matter 指定英文網址：
 
 ```yaml
 ---

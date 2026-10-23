@@ -10,7 +10,7 @@ A Hexo 8 static blog ("CYhuang's Blog", `zh-TW`, `Asia/Taipei`) using the Fluid 
 
 ## Node version
 
-Hexo 8.1.2 requires **Node >= 20.19.0**. The system Node is 18.19.1, so `nvm use` (reads `.nvmrc` → 22) is required before running any hexo command. In non-login shells nvm must be sourced first:
+Hexo 8.1.2 requires **Node >= 20.19.0**. There is no system (apt) Node — the old Node 18 was removed — so nvm is the only source of `node`/`npm`, with default alias `22` (`.nvmrc` → 22). Non-interactive shells (and cron, systemd, `sudo`) don't load `~/.bashrc`, so `node` doesn't exist there until nvm is sourced:
 
 ```bash
 export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"; nvm use
@@ -42,6 +42,7 @@ Push to `main` → `.github/workflows/deploy.yml` runs `npm ci`, `hexo clean`, `
   gh api repos/CYhuang314/CYhuang314.github.io/pages --jq '.build_type'
   gh api -X PUT repos/CYhuang314/CYhuang314.github.io/pages -f build_type=workflow
   ```
+- The workflow's `setup-node` uses `node-version: 22` with `check-latest: true`, so CI picks up Node security releases immediately instead of the runner's cached (possibly older) 22.x. Keep it in sync with `.nvmrc`.
 - The workflow uses `npm ci`, so `package-lock.json` must be committed in sync with `package.json` or the build fails.
 - The theme is the npm dependency `hexo-theme-fluid` (v1.9.9), deliberately **not** a git submodule, so CI needs no submodule handling. Keep it that way.
 

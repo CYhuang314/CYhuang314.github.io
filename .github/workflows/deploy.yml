@@ -28,6 +28,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          # 不用 runner 快取的舊版，確保拿到最新的 22.x（含安全修補）
+          check-latest: true
           cache: npm
 
       - name: Install dependencies
